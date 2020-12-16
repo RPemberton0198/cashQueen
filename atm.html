@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ATM Machines</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <!--login Page-->
+    <h1>ATM Machine</h1>
+    <p id="displayAlerts"></p>
+    <p id="displayBalance"></p>
+    <!--login page-->
+    <div id="login">
+      <div>
+        <!--login  existing PIN button-->
+        <label for="loginPin"> Enter Existing PIN</label>
+        <input type="text" id="loginPin" />
+        <button onclick="loginPin()" id="loginPinBtn">submit</button>
+      </div>
+      <div>
+        <!--login create new PIN button-->
+        <label for="createPin"> Enter PIN Number to Create New Account</label>
+        <input type="text" id="createPin" />
+        <button onclick="createPin()" id="createPinBtn">submit</button>
+      </div>
+    </div>
+
+    <!--This is like homepage-enter withdrawl/deposit/update PIN functions-->
+    <!--The first div will hide this page for login -->
+    <div id="withdrawalDeposit" style="display: none">
+      <div>
+        <!--submit button for enter withdrawal amount box-->
+        <label for="withdrawalInput"> Enter amount to withdrawal</label>
+        <input type="text" id="withdrawalInput" />
+        <button onclick="withdrawal()" id="withdrawalBtn">submit</button>
+      </div>
+      <div>
+        <!--submit button for enter deposit amount box-->
+        <label for="depositInput"> Enter amount to Deposit</label>
+        <input type="text" id="depositInput" />
+        <button onclick="deposit()" id="depositBtn">submit</button>
+      </div>
+
+      <div>
+        <!--Submit button for updatePin box -->
+        <label for="updatePin"> Update PIN - Enter New PIN</label>
+        <input type="text" id="updatePin" />
+        <button onclick="updatePin()" id="updatePinBtn">submit</button>
+      </div>
+      <div>
+        <!--Submit button for logOff box -->
+        <label for="logOff"> Click to Log Off</label>
+        <!--<input type="text" id="logOff" />-->
+        <button onclick="logOff()" id="logOffBtn">submit</button>
+      </div>
+    </div>
+
+    <script>
+      loginPin = () => {
+        let loginPin = parseInt(document.getElementById("loginPin").value);
+        if (isNaN(loginPin)) {
+          document.getElementById("displayAlerts").innerHTML =
+            "Value must be numbers only";
+          setTimeout(clearErr, 3000);
+        } else if (loginPin == localStorage.getItem("pin")) {
+          document.getElementById("login").style = "display:none";
+          document.getElementById("withdrawalDeposit").style = "display:block";
+          document.getElementById("displayBalance").innerHTML =
+            "$" + localStorage.getItem("balance");
+        } else {
+          document.getElementById("displayAlerts").innerHTML =
+            "Account Not Found";
+          setTimeout(clearErr, 3000);
+        }
+      };
+
+      createPin = () => {
+        let createPin = parseInt(document.getElementById("createPin").value);
+        if (isNaN(createPin)) {
+          dcument.getElementById("displayAlerts").innerHTML =
+            "Value must be numbers only";
+          setTimeout(clearErr, 3000);
+        } else if (createPin == localStorage.getItem("pin")) {
+          document.getElementById("displayAlerts").innerHTML =
+            "PIN already exists";
+          setTimeout(clearErr, 3000);
+        } else {
+          localStorage.setItem("pin", createPin);
+          localStorage.setItem("balance", 0);
+          document.getElementById("login").style = "display:none";
+          document.getElementById("withdrawalDeposit").style = "display:block";
+          document.getElementById("displayBalance").innerHTML =
+            "$" + localStorage.getItem("balance");
+        }
+      };
+
+      withdrawal = () => {
+        let withdrawalAmount = parseInt(
+          document.getElementById("withdrawalInput").value
+        );
+        let lsBalance = parseInt(localStorage.getItem("balance"));
+        if (isNaN(withdrawalAmount)) {
+          document.getElementById("displayAlerts").innerHTML =
+            "Value must be numbers only";
+          setTimeout(clearErr, 3000);
+        } else if (withdrawalAmount > localStorage.getItem("balance")) {
+          document.getElementById("displayAlerts").innerHTML =
+            "Sorry Charlie, Try Again";
+          setTimeout(clearErr, 3000);
+        } else {
+          lsBalance -= withdrawalAmount;
+          localStorage.setItem("balance", lsBalance);
+          document.getElementById("displayBalance").innerHTML =
+            "$" + localStorage.getItem("balance");
+        }
+      };
+      deposit = () => {
+        let depositAmount = parseInt(
+          document.getElementById("depositInput").value
+        );
+        let lsBalance = parseInt(localStorage.getItem("balance"));
+        if (isNaN(depositAmount)) {
+          document.getElementById("displayAlerts").innerHTML =
+            "Value must be numbers only";
+          setTimeout(clearErr, 3000);
+        } else if (depositAmount < 0) {
+          document.getElementById("displayAlerts").innerHTML =
+            "Can't deposit a negative number";
+          setTimeout(clearErr, 3000);
+        } else {
+          lsBalance += depositAmount;
+          localStorage.setItem("balance", lsBalance);
+          document.getElementById("displayBalance").innerHTML =
+            "$" + localStorage.getItem("balance");
+        }
+      };
+      updatePin = () => {
+        let updatePin = parseInt(document.getElementById("updatePin").value);
+        if (isNaN(updatePin)) {
+          document.getElementById("displayAlerts").innerHTML =
+            "Value must be numbers only";
+          setTimeout(clearErr, 3000);
+        } else if (updatePin == localStorage.getItem("pin")) {
+          document.getElementById("displayAlerts").innerHTML =
+            "PIN already exists";
+          setTimeout(clearErr, 3000);
+        } else {
+          localStorage.setItem("pin", updatePin);
+          document.getElementById("login").style = "display:block";
+        }
+        logOff = () => {
+          document.getElementById("withdrawalDeposit").style = "display:none";
+          document.getElementById("displayBalance").style = "display:none";
+        };
+      };
+      function isBlank(bal) {}
+
+      clearErr = () => {
+        document.getElementById("displayAlerts").innerHTML = "";
+      };
+    </script>
+  </body>
+</html>

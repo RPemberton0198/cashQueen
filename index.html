@@ -2,7 +2,11 @@
 <html>
 
 <head>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ATM</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="code.js"></script>
 </head>
 
 <body>
@@ -23,6 +27,12 @@
 
         <button onclick="displayWithrawal()">Withdrawal</button>
         <p id="wbalance"></p>
+        <!-- two on click buttons added returning to log in and -->
+         <button onclick="deposit()">Deposit</button>
+        <p id="deposit"></p>
+
+         <button onclick="returntologin()">Return to Login</button>
+        <p id="returntologin"></p>
         <!-- implement this: add button for returning to main menu -->
     </div>
 
