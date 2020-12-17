@@ -63,6 +63,26 @@
     </div>
 
     <script>
+      /*comments for JS logInPin function
+          line one:   I create a function and named loginPin, 
+let       line two:   I call on the element I wish to command by calling-in the HTML div Id named
+                      loginPin
+if        line three: The "if" statement tells the browser that :\"if" an attempt is made using a
+                      NaN, display an alert. I do this by calling-in the HTML Element named
+                      diplayAlerts and using .innerHTML, the text, Value must be numbers only
+                      will be displayed alerting the user of the error
+else if   line four:  This gets evaluated provided the above if statement is true, numbers were  
+                      in fact submitted by the user. I now ask for local storge to check if the numbers are a valid set stored there. If evaluated to be true, 
+                      then next:
+                      Using .getElementById and .style css, Ihe div loginPin becomes hidden(display:none) and the withdrawalDeposit is now visible (display:block) to the user. 
+                      then next:
+                      I use .getElementById again but this time I call in the Alert Elemnt Id named displayBalance Using .innerHTML and .getItem from local storage I set the alert display the value obtained after concatenating a value entered by user and the value in local storage named balance.
+else      line five   If the above gets evaluated to be invalid or false,
+                      using .getElementById displayAlerts and .innerHTML the text "account not found" will be diplayed to the user if the submitted PIN number is not located in the local server.
+                setTimeout(clearErr, 3000); is used to end and clear the display alert
+
+
+        */
       loginPin = () => {
         let loginPin = parseInt(document.getElementById("loginPin").value);
         if (isNaN(loginPin)) {
@@ -141,6 +161,20 @@
             "$" + localStorage.getItem("balance");
         }
       };
+
+      /* 
+      comments for updatePin function
+      function name updatePin
+          evaluate value for NaN
+          if NaN display alert "value must be numbers only"
+          setTimeOut clear diplay alert message
+          next evaluate local storage against value submitted
+          if on local storage
+          display alert error message PIN already exists
+          if not on local storage
+          localStorge.setItem will now storage the value as new pin
+          
+          */
       updatePin = () => {
         let updatePin = parseInt(document.getElementById("updatePin").value);
         if (isNaN(updatePin)) {
@@ -155,13 +189,19 @@
           localStorage.setItem("pin", updatePin);
           document.getElementById("login").style = "display:block";
         }
+        /* by clicking the logOff onclick button. withdrawalDeposit Element Id display:none hides the element which now allows logIn Element to be visible displayBalance will also become hidden until called again through the logIn function*/
         logOff = () => {
           document.getElementById("withdrawalDeposit").style = "display:none";
           document.getElementById("displayBalance").style = "display:none";
         };
       };
-      function isBlank(bal) {}
 
+      /*this function is used in the withdrawal and deposit functions 
+       it is used to test for a value returning a true or false 
+       I used it to check for a balance value*/
+      function isBlank(bal) {}
+      /*The clearErr function is used within other earlier function as well.
+This is used to hide an alert after it has been displayed for a set parameter of time*/
       clearErr = () => {
         document.getElementById("displayAlerts").innerHTML = "";
       };
