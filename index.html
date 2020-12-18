@@ -1,136 +1,210 @@
 <!DOCTYPE html>
-<html>
-
-<head>
+<html lang="en">
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ATM</title>
-    <link rel="stylesheet" href="style.css" />
-    <script src="code.js"></script>
-</head>
-
-<body>
-    <div id="start"> 
-        <label>Input your pin:</label>
-        <input id="pinput"></input>
-        <button onclick="login()">Submit</button>
-        <p id="account"></p>
-
-        <label>New account:</label>
-        <input id="newpinput"></input>
-        <button onclick="newAccount()">Submit</button>
+    <title>ATM Machines</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <!--login Page-->
+    <h1>ATM Machine</h1>
+    <p id="displayAlerts"></p>
+    <p id="displayBalance"></p>
+    <!--login page-->
+    <div id="login">
+      <div>
+        <!--login  existing PIN button-->
+        <label for="loginPin"> Enter Existing PIN</label>
+        <input type="text" id="loginPin" />
+        <button onclick="loginPin()" id="loginPinBtn">submit</button>
+      </div>
+      <div>
+        <!--login create new PIN button-->
+        <label for="createPin"> Enter PIN Number to Create New Account</label>
+        <input type="text" id="createPin" />
+        <button onclick="createPin()" id="createPinBtn">submit</button>
+      </div>
     </div>
 
-    <div id="menu" style="display:none"> 
-        <button onclick="displayBalance()">Get Balance</button>
-        <p id="balance"></p>
+    <!--This is like homepage-enter withdrawl/deposit/update PIN functions-->
+    <!--The first div will hide this page for login -->
+    <div id="withdrawalDeposit" style="display: none">
+      <div>
+        <!--submit button for enter withdrawal amount box-->
+        <label for="withdrawalInput"> Enter amount to withdrawal</label>
+        <input type="text" id="withdrawalInput" />
+        <button onclick="withdrawal()" id="withdrawalBtn">submit</button>
+      </div>
+      <div>
+        <!--submit button for enter deposit amount box-->
+        <label for="depositInput"> Enter amount to Deposit</label>
+        <input type="text" id="depositInput" />
+        <button onclick="deposit()" id="depositBtn">submit</button>
+      </div>
 
-        <button onclick="displayWithrawal()">Withdrawal</button>
-        <p id="wbalance"></p>
-        <!-- two on click buttons added returning to log in and -->
-         <button onclick="deposit()">Deposit</button>
-        <p id="deposit"></p>
-
-         <button onclick="returntologin()">Return to Login</button>
-        <p id="returntologin"></p>
-        <!-- implement this: add button for returning to main menu -->
+      <div>
+        <!--Submit button for updatePin box -->
+        <label for="updatePin"> Update PIN - Enter New PIN</label>
+        <input type="text" id="updatePin" />
+        <button onclick="updatePin()" id="updatePinBtn">submit</button>
+      </div>
+      <div>
+        <!--Submit button for logOff box -->
+        <label for="logOff"> Click to Log Off</label>
+        <!--<input type="text" id="logOff" />-->
+        <button onclick="logOff()" id="logOffBtn">submit</button>
+      </div>
     </div>
 
     <script>
-        //bank account 
-        //create a new ATM instance when the page loads
-        let atm = new Atm(); 
+      /*comments for JS logInPin function
+          line one:   I create a function and named loginPin, 
+let       line two:   I call on the element I wish to command by calling-in the HTML div Id named
+                      loginPin
+if        line three: The "if" statement tells the browser that :\"if" an attempt is made using a
+                      NaN, display an alert. I do this by calling-in the HTML Element named
+                      diplayAlerts and using .innerHTML, the text, Value must be numbers only
+                      will be displayed alerting the user of the error
+else if   line four:  This gets evaluated provided the above if statement is true, numbers were  
+                      in fact submitted by the user. I now ask for local storge to check if the numbers are a valid set stored there. If evaluated to be true, 
+                      then next:
+                      Using .getElementById and .style css, Ihe div loginPin becomes hidden(display:none) and the withdrawalDeposit is now visible (display:block) to the user. 
+                      then next:
+                      I use .getElementById again but this time I call in the Alert Elemnt Id named displayBalance Using .innerHTML and .getItem from local storage I set the alert display the value obtained after concatenating a value entered by user and the value in local storage named balance.
+else      line five   If the above gets evaluated to be invalid or false,
+                      using .getElementById displayAlerts and .innerHTML the text "account not found" will be diplayed to the user if the submitted PIN number is not located in the local server.
+                setTimeout(clearErr, 3000); is used to end and clear the display alert
 
-        function Atm() {
-            this.accounts = [];
-            this.currentAccount = null; 
-        
-            this.createAccount = function (pin){
-                let newAccount = new Account(pin);
-                this.accounts.push(newAccount);
-                this.currentAccount = newAccount; 
-                return newAccount; 
-            };
 
-            this.getAccount = function (pin){
-                for (let i = 0; i < this.accounts.length; i++) {
-                    if (this.accounts[i].pin === pin) {
-                        //return the bank account that matches our pin
-                        this.currentAccount = this.accounts[i]; 
-                        return this.accounts[i];
-                    }
-                }
-                return null; 
-            }; 
-
-            //settings for this atm for the future?
-            this.configuration = {};
-
-       
+        */
+      loginPin = () => {
+        let loginPin = parseInt(document.getElementById("loginPin").value);
+        if (isNaN(loginPin)) {
+          document.getElementById("displayAlerts").innerHTML =
+            "Value must be numbers only";
+          setTimeout(clearErr, 3000);
+        } else if (loginPin == localStorage.getItem("pin")) {
+          document.getElementById("login").style = "display:none";
+          document.getElementById("withdrawalDeposit").style = "display:block";
+          document.getElementById("displayBalance").innerHTML =
+            "$" + localStorage.getItem("balance");
+        } else {
+          document.getElementById("displayAlerts").innerHTML =
+            "Account Not Found";
+          setTimeout(clearErr, 3000);
         }
+      };
 
-        function Account(pin) { 
-            this.pin = pin;
-            this.balance = 0;
-            
-            //getBalance 
-            this.getBalance = function(){
-                    return(this.balance); 
-            }
-
-            //withdrawal
-            this.withdrawal = function(){
-                //implement this 
-            }
-
-            //deposit 
-            this.deposit = function(){
-                //this implement this 
-            }
-
+      createPin = () => {
+        let createPin = parseInt(document.getElementById("createPin").value);
+        if (isNaN(createPin)) {
+          dcument.getElementById("displayAlerts").innerHTML =
+            "Value must be numbers only";
+          setTimeout(clearErr, 3000);
+        } else if (createPin == localStorage.getItem("pin")) {
+          document.getElementById("displayAlerts").innerHTML =
+            "PIN already exists";
+          setTimeout(clearErr, 3000);
+        } else {
+          localStorage.setItem("pin", createPin);
+          localStorage.setItem("balance", 0);
+          document.getElementById("login").style = "display:none";
+          document.getElementById("withdrawalDeposit").style = "display:block";
+          document.getElementById("displayBalance").innerHTML =
+            "$" + localStorage.getItem("balance");
         }
+      };
 
-        function returnToMenu(){
-            //implement this 
+      withdrawal = () => {
+        let withdrawalAmount = parseInt(
+          document.getElementById("withdrawalInput").value
+        );
+        let lsBalance = parseInt(localStorage.getItem("balance"));
+        if (isNaN(withdrawalAmount)) {
+          document.getElementById("displayAlerts").innerHTML =
+            "Value must be numbers only";
+          setTimeout(clearErr, 3000);
+        } else if (withdrawalAmount > localStorage.getItem("balance")) {
+          document.getElementById("displayAlerts").innerHTML =
+            "Sorry Charlie, Try Again";
+          setTimeout(clearErr, 3000);
+        } else {
+          lsBalance -= withdrawalAmount;
+          localStorage.setItem("balance", lsBalance);
+          document.getElementById("displayBalance").innerHTML =
+            "$" + localStorage.getItem("balance");
         }
-
-        function displayBalance() {
-            //we need a pin 
-            document.getElementById("balance").innerHTML = 
-            atm.currentAccount.balance; 
+      };
+      deposit = () => {
+        let depositAmount = parseInt(
+          document.getElementById("depositInput").value
+        );
+        let lsBalance = parseInt(localStorage.getItem("balance"));
+        if (isNaN(depositAmount)) {
+          document.getElementById("displayAlerts").innerHTML =
+            "Value must be numbers only";
+          setTimeout(clearErr, 3000);
+        } else if (depositAmount < 0) {
+          document.getElementById("displayAlerts").innerHTML =
+            "Can't deposit a negative number";
+          setTimeout(clearErr, 3000);
+        } else {
+          lsBalance += depositAmount;
+          localStorage.setItem("balance", lsBalance);
+          document.getElementById("displayBalance").innerHTML =
+            "$" + localStorage.getItem("balance");
         }
+      };
 
-        //UI side/display logic 
-        function newAccount(){
-                let pin = parseInt(document.getElementById("newpinput").value);
-                atm.createAccount(pin);
-                //display menu
-                displayMenu(); 
-
-            }
-
-        function login() {
-            let pin = parseInt(document.getElementById("pinput").value);
-            //if we find a pin, do something, open a menu or whatever and exit
-            //the get account function 
-            atm.getAccount(pin);
-            if( atm.currentAccount === null){
-                //if the account doesn't, create with that pin
-                alert("Invalid pin!"); 
-            } else {
-                displayMenu(); 
-            }
-            //document.getElementById("account").innerHTML = "pin: " + acct.pin + "<br>" + "balance: " + acct.balance; 
-            return;
+      /* 
+      comments for updatePin function
+      function name updatePin
+          evaluate value for NaN
+          if NaN display alert "value must be numbers only"
+          setTimeOut clear diplay alert message
+          next evaluate local storage against value submitted
+          if on local storage
+          display alert error message PIN already exists
+          if not on local storage
+          localStorge.setItem will now storage the value as new pin
+          
+          */
+      updatePin = () => {
+        let updatePin = parseInt(document.getElementById("updatePin").value);
+        if (isNaN(updatePin)) {
+          document.getElementById("displayAlerts").innerHTML =
+            "Value must be numbers only";
+          setTimeout(clearErr, 3000);
+        } else if (updatePin == localStorage.getItem("pin")) {
+          document.getElementById("displayAlerts").innerHTML =
+            "PIN already exists";
+          setTimeout(clearErr, 3000);
+        } else {
+          localStorage.setItem("pin", updatePin);
+          document.getElementById("login").style = "display:block";
         }
+        /* by clicking the logOff onclick button. withdrawalDeposit Element Id display:none hides the element which now allows logIn Element to be visible displayBalance will also become hidden until called again through the logIn function*/
+        logOff = () => {
+          document.getElementById("withdrawalDeposit").style = "display:none";
+          document.getElementById("displayBalance").style = "display:none";
+        };
+      };
 
-        function displayMenu(){
-            //display menu 
-            document.getElementById("start").style.display = "none";
-            document.getElementById("menu").style.display = "block";
-        }
+      /*this function is used in the withdrawal and deposit functions 
+       it is used to test for a value returning a true or false 
+       I used it to check for a balance value*/
+      function isBlank(bal) {}
+      /*The clearErr function is used within other earlier function as well.
+This is used to hide an alert after it has been displayed for a set parameter of time*/
+      clearErr = () => {
+        document.getElementById("displayAlerts").innerHTML = "";
+      };
     </script>
-
-</body>
-
+  </body>
 </html>
